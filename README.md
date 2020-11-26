@@ -9,4 +9,7 @@ Current list of things to look into:
 7. Other add ons if there is time, heartbeat servers security frameworks etc etc
 
 Priorty in terms of importance:
-Docker > Kubernetes > Kafka > DBs > Argo > everything else
+Docker > Kubernetes > DBs > Argo > Kafka > Everything else
+
+Kubenetes will take the longest time to complete due to its sheer complexity, the advice for DIY Kubernetes clusters is to not DIY a Kubernetes Cluster
+and instead use hosted services.
