@@ -12,7 +12,7 @@ services:
       - "5000:5000"
     # Mount volume 
     volumes:
-      - "/Users/will/Desktop/dev/Python_Docker_Test:/code"
+      - "./:/code"
 
     # Link database container to app container 
     # for rechability.
@@ -37,5 +37,5 @@ services:
     # everything in docker-entrypoint-initdb.d folder
     # is executed as soon as container is up nd running.
     volumes:
-      - "/Users/will/Desktop/dev/Python_Docker_Test/db/init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "./db/init.sql:/docker-entrypoint-initdb.d/init.sql"
     
