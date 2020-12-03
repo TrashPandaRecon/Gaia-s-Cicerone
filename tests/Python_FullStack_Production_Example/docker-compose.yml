@@ -6,6 +6,7 @@ services:
     # docker-compose.yml is present.
 
     image: venky8283/flask_app:4.0
+    
 
     # Mount volume 
     volumes:
@@ -18,11 +19,11 @@ services:
       replicas: 2
       resources:
         limits:
-          cpus: '0.50'
-          memory: 1024M
-        reservations:
           cpus: '0.25'
-          memory: 1024M
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     
   database:
 
@@ -48,10 +49,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 1024M
+          memory: 256M
         reservations:
           cpus: '0.25'
-          memory: 1024M
+          memory: 100M
     
 
     networks:
@@ -102,14 +103,14 @@ services:
     # Deploy replicas to divide load to two services.
 
     deploy:
-      replicas: 2
+      replicas: 1
       resources:
         limits:
           cpus: '0.50'
-          memory: 1024M
+          memory: 256M
         reservations:
           cpus: '0.25'
-          memory: 1024M
+          memory: 100M
 
     # Attach network to establish connection 
     # between flask app and nginx. 
