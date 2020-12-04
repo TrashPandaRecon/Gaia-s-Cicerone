@@ -1,14 +1,27 @@
 apiVersion: v1
+# kind tells Kubernetes that we are defining a Service Object
 kind: Service
+# The metadata section defines a name for the service as well as
+# any labels we add here are not related to labels for selecting pods,
+# they are specifically for identifying the service.
 metadata:
   name: todo-svc
   labels:
     app: todo-service
 spec:
+  #Type defines the Service type we want
   type: NodePort
   ports:
+  # port configures the Service to listen on port 3000 for internal requests.
   - port: 3000
+    # Note that nodePort is really only acceptable in a closed system due to it essentially punching
+    # a hole in security, it bypasses almost all network security in Kubernetes by design.
+    # Also everyone will hate you for using it. It exposes an upper range of Ports that firewalls may block.
+    # Only use it for internal systems that are airgapped.
+    # For externally facing systems, look at Ingress
     nodePort: 30001
+    #  TargetPort tells Kubernetes to send traffic to the application Pods on the target port.
+    targetPort: 3000
     protocol: TCP
   selector:
     app: todo
