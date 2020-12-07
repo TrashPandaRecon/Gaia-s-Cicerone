@@ -42,6 +42,13 @@ spec:
         image: trashpandarecon/todo_list:1.0
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
 
 ---
 
@@ -75,6 +82,13 @@ spec:
         image: trashpandarecon/todo_list:1.0
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
 
 ---
 
@@ -129,4 +143,11 @@ spec:
     image: ubuntu
     tty: true
     stdin: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "200m"
+      limits:
+        memory: "200Mi"
+        cpu: "250m"
 
