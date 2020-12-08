@@ -1,9 +1,9 @@
-# kind: StorageClass
-# apiVersion: storage.k8s.io/v1
-# metadata:
-#   name: local-storage
-# provisioner: kubernetes.io/no-provisioner
-# volumeBindingMode: WaitForFirstConsumer
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
 
 ---
 apiVersion: v1
@@ -16,7 +16,8 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: local-storage
+  volumeMode: Filesystem
   local:
     path: /Users/will/kube-storage/vol1
   nodeAffinity:
@@ -43,7 +44,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: manual
+  storageClassName: local-storage
   resources:
     requests:
       storage: 100Mi

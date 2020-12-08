@@ -11,8 +11,6 @@ metadata:
   name: prod
 
 ---
-# this is not being utilized at the moment i am still trying to figure out how to 
-# use this with local pvs
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -32,8 +30,9 @@ spec:
     storage: 100Mi
   accessModes:
   - ReadWriteOnce
+  volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: local-storage
   local:
   # note that this path will need to be created like the following
   # on the node, where the POD will be located (docker-desktop in our case):
@@ -69,7 +68,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: manual
+  storageClassName: local-storage
   resources:
     requests:
       storage: 100Mi
