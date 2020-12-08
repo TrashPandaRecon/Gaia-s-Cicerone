@@ -11,14 +11,76 @@ metadata:
   name: prod
 
 ---
+# this is not being utilized at the moment i am still trying to figure out how to 
+# use this with local pvs
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  namespace: prod
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
 
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: prod
+  name: local-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  local:
+  # note that this path will need to be created like the following
+  # on the node, where the POD will be located (docker-desktop in our case):
+  # DIRNAME="vol1"
+  # mkdir -p /mnt/disk/$DIRNAME 
+  # chcon -Rt svirt_sandbox_file_t /mnt/disk/$DIRNAME
+  # chmod 777 /mnt/disk/$DIRNAME
+  # svirt_sandbox_file_t must be set to allow containers to directly write to directories created for
+  # the persistent volumes. By default containers are restricted from writing directly to the underlying host file system.
+    path: /Users/will/kube-storage/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          #  You will need to exchange the hostname value below to the name of 
+          # the node that matches your environment.
+          # you can check by typing kubectl get nodes --show-labels.
+          # they key above represents a dictionary key.
+          # in this example the output was 
+          # beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=docker-desktop,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+          # notice how Kubernetes.io/hostname=docker-desktop is in the output? yup.
+          values:
+          - docker-desktop
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: prod
+  name: local-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 100Mi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: prod
   name: todo-deploy
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: todo
@@ -42,6 +104,9 @@ spec:
         image: trashpandarecon/todo_list:1.0
         ports:
         - containerPort: 3000
+        volumeMounts:
+          - mountPath: /etc/todos
+            name: todolist-ps
         resources:
           requests:
             memory: "100Mi"
@@ -49,6 +114,10 @@ spec:
           limits:
             memory: "200Mi"
             cpu: "250m"
+      volumes:
+        - name: todolist-ps
+          persistentVolumeClaim:
+              claimName: local-pvc
 
 ---
 
