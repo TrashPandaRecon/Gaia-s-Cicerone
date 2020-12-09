@@ -30,18 +30,14 @@ spec:
     storage: 100Mi
   accessModes:
   - ReadWriteOnce
+  # This makes it so that you can just use a directory on the host system as storage
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
   # note that this path will need to be created like the following
   # on the node, where the POD will be located (docker-desktop in our case):
-  # DIRNAME="vol1"
-  # mkdir -p /mnt/disk/$DIRNAME 
-  # chcon -Rt svirt_sandbox_file_t /mnt/disk/$DIRNAME
-  # chmod 777 /mnt/disk/$DIRNAME
-  # svirt_sandbox_file_t must be set to allow containers to directly write to directories created for
-  # the persistent volumes. By default containers are restricted from writing directly to the underlying host file system.
+  # By default containers are restricted from writing directly to the underlying host file system.
     path: /Users/will/kube-storage/vol1
   nodeAffinity:
     required:

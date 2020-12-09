@@ -19,6 +19,8 @@ spec:
   storageClassName: local-storage
   volumeMode: Filesystem
   local:
+    # This path needs to actually exist. Usually you use a disk mounted under /mnt/ but we are
+    # using a directory to keep this example usable.
     path: /Users/will/kube-storage/vol1
   nodeAffinity:
     required:
@@ -48,8 +50,8 @@ spec:
   resources:
     requests:
       storage: 100Mi
----
 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
