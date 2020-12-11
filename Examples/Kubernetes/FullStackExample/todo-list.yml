@@ -1,0 +1,217 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  namespace: prod
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: prod
+  name: local-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  # This makes it so that you can just use a directory on the host system as storage
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+  # note that this path will need to be created like the following
+  # on the node, where the POD will be located (docker-desktop in our case):
+  # By default containers are restricted from writing directly to the underlying host file system.
+    path: /Users/will/kube-storage/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          #  You will need to exchange the hostname value below to the name of 
+          # the node that matches your environment.
+          # you can check by typing kubectl get nodes --show-labels.
+          # they key above represents a dictionary key.
+          # in this example the output was 
+          # beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=docker-desktop,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+          # notice how Kubernetes.io/hostname=docker-desktop is in the output? yup.
+          values:
+          - docker-desktop
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: prod
+  name: local-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: todo-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo
+      zone: prod
+      version: v1
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: todo
+        zone: prod
+        version: v1
+    spec:
+      containers:
+      - name: todo-pod
+        image: trashpandarecon/todo_list:1.0
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+          - mountPath: /etc/todos
+            name: todolist-ps
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
+      volumes:
+        - name: todolist-ps
+          persistentVolumeClaim:
+              claimName: local-pvc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: todo-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todo
+      zone: dev
+      version: v1
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: todo
+        zone: dev
+        version: v1
+    spec:
+      containers:
+      - name: todo-pod
+        image: trashpandarecon/todo_list:1.0
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
+
+---
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: todo-svc
+  namespace: prod
+  labels:
+    app: todo-service
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    nodePort: 30001
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: todo
+    zone: prod
+  
+---
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: todo-svc
+  namespace: dev
+  labels:
+    app: todo-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: todo
+    zone: dev
+
+---
+# Adding an ubuntu image just to access the dev todo-list because its not exposed via nodeport.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+  namespace: dev
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+  - name: testpod
+    image: ubuntu
+    tty: true
+    stdin: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "200m"
+      limits:
+        memory: "200Mi"
+        cpu: "250m"
+
