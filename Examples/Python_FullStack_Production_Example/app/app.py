@@ -11,7 +11,6 @@ app.config['MYSQL_HOST'] = 'database'
 
 db  = MySQL(app)
 
-
 ### Temporary database
 ### We will replace this dictionary
 
@@ -19,7 +18,7 @@ db  = MySQL(app)
 def login():
 
     cursor = db.connection.cursor()
-
+    
 
     if request.method == 'GET':
         return render_template('form.html', title='Sign In')
