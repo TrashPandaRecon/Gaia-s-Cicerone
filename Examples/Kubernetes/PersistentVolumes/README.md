@@ -5,4 +5,6 @@ These Manifests show examples of the various Persistent Volume types as well as 
 
 ### Some things to look at
 
+These examples all use local storage persistent volumes, this is a basic example and not scalable at all. It is just meant to show how they all link together,
 
+Notice how the PVC, PV, SC and volume mounts all reference each other by name.

@@ -14,18 +14,13 @@
 ---
 
 <p align="center"> 
-    <br> A guide on the architecture and technologies used in cloud native applications.`
+    <br> A starter guide on the architecture and technologies used in cloud native applications.`
 </p>
 
 ## 📝 Table of Contents
 
 - [About](#about)
 - [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
 
@@ -35,41 +30,20 @@ This project attempts to give the user knowledge about the architecture and tech
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+The bare minimum is to have a docker installed.
 
-### Prerequisites
+The ideal is to install everything mentioned in the guide.
 
-What things you need to install the software and how to install them.
+A list of the overarching technologies used.
+Docker
+Kubernetes
+Argo
+Kafka
+Whatever database you want 
 
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
+Note: It is ideal for you to use a POSIX system - MacOS/Linux Distros. This is because the vast majority of the guide will be referring to things specific to the Linux Kernel.
 
 
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
-
-## 🚀 Deployment <a name = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a name = "authors"></a>
 
@@ -78,6 +52,6 @@ Add additional notes about how to deploy this on a live system.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+- Hat tip to anyone whose code i just stole to save time
+- Good documentation
+- So many blogs
