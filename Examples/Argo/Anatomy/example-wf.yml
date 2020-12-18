@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: anatomy-example
+spec:
+  templates:
+  - name: extractor
+    image: extractor:v3
+  - name: transformer 
+    image: transformer:v3
+  
+  dag:
+    tasks:
+    - name: get-views
+      template: extractor
+      parameters: [{table: views}]
+    - name: get-payments
+      template: extractor
+      parameters: [{table:payments}]
+    - name: transform
+      template: transformer
+      dependencies: [get-views, get-payments]
+      
+
