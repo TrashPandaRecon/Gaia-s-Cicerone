@@ -1,0 +1,36 @@
+#  This is an example of how StatefulSets work, it does'nt really do anyhting in particular.
+kind: Service
+apiVersion: v1
+metadata:
+  name: dullahan 
+spec:
+  # setting clusterIP to None will make this a headless Service
+  clusterIP: None
+  selector:
+    app: mongo
+
+---
+# This StatefulSet is not being used, it is just for illustration purposes
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-svc
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  # setting serviceName to a headless service will cause the referenced Service to become
+  # a StatefulSets governing Service.
+  serviceName: dullahan
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: ctr-mongo
+        image: mongo:latest
+      terminationGracePeriodSeconds: 10
+
+        

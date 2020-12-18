@@ -5,4 +5,4 @@ This manifest exhibits basic Deployments, including some of the common ways to u
 
 ### Some things to look at
 
-
+This is pretty self explanitory, note that deployment sets are built on top of ReplicaSets which are built on top of Pods.

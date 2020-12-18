@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  kubeapps
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name:  kubeapps-operator
+  namespace: kubeapps
+---
+# Binding cluster role to service account
+# note that a ClusterRoleBinding exists at the cluster level, but the subject of the ClusterRoleBinding exists in a single namespace
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubeapps-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  # only give cluster-admin  if you want to grant the service account access to all namespaces in your cluster.
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubeapps-operator
+  namespace: kubeapps
+
+#  Note that an API token is associated with every service account, to get the API token, use the following
+# kubectl get secret $(kubectl get serviceaccount kubeapps-operator -o jsonpath='{range .secrets[*]}{.name}{"\n"}{end}' | grep kubeapps-operator-token) -o jsonpath='{.data.token}' -o go-template='{{.data.token | base64decode}}' && echo
