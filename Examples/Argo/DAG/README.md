@@ -1,7 +1,7 @@
 ## DAGs
 As an alternative to specifying sequences of steps, you can define the workflow as a Directed Acyclic Graph (DAG) by specifying the dependencies of each task. This can be simpler to maintain for complex workflows and allows for maximum paralellism when running tasks.
 
-In the [example-wf.yml](example), *A* runs first, *B* and *C* run in parallel after *A* (if it succeeds) then, once *B* and *C* are completed succesfully, *D* can run.
+In the [example](example-wf.yml), *A* runs first, *B* and *C* run in parallel after *A* (if it succeeds) then, once *B* and *C* are completed succesfully, *D* can run.
 
 There is no reason why only one container can be the root (starting container), you can have multi-root DAGs. The templates called from a DAG or Steps template can themselves be DAGs or Steps templates. This can allow for complex workflows to be split into manageable pieces.
 

@@ -19,8 +19,8 @@ Command-line parameters can also be used to override the default entrypoint and 
 argo submit example-wf.yaml --entrypoint whalesay-caps 
 ```
 
-By using a combination of the *--entrypoint* and *-p* parameters, you can call any template in the workflow spec with any parameter you want. Taking a look at the second [example2-wf.yml](example), since the values set in the *spec.arguments.parameters* are globally scoped and can be accessed via *{{workflow.parameters.parameter_name}}*. This can be useful to pass information to multiple steps in a workflow. For example, if you wanted to run your workflows with different logging levels that are set in the environment of each container, you may want to set different logging levels at runtime.
+By using a combination of the *--entrypoint* and *-p* parameters, you can call any template in the workflow spec with any parameter you want. Taking a look at the second [example](example2-wf.yml), since the values set in the *spec.arguments.parameters* are globally scoped and can be accessed via *{{workflow.parameters.parameter_name}}*. This can be useful to pass information to multiple steps in a workflow. For example, if you wanted to run your workflows with different logging levels that are set in the environment of each container, you may want to set different logging levels at runtime.
 
-In the second [example2-wf.yml](example), both steps *A* and *B* would have the same log-level set to *INFO*
+In the second [example](example2-wf.yml), both steps *A* and *B* would have the same log-level set to *INFO*
 and can easily be changed between workflow submissions using the *-p* flag.
 
