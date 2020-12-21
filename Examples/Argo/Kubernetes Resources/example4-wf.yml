@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: k8s-patch-
+spec:
+  entrypoint: cront-tmpl
+  templates:
+  - name: cront-tmpl
+    resource:
+      action: patch
+      mergeStrategy: merge                 # Must be one of [strategic merge json]
+      manifest: |
+        apiVersion: "stable.example.com/v1"
+        kind: CronTab
+        spec:
+          cronSpec: "* * * * */10"
+          image: my-awesome-cron-image

@@ -3,7 +3,7 @@
  <img width=200px height=150px src="https://gaiatheblog.files.wordpress.com/2016/02/gaia-the-blog.png?w=225&h=300" alt="Project logo"></a>
 </p>
 
-<h3 align="center">Gaia Cicerone</h3>
+<h3 align="center">Gaia's Cicerone</h3>
 
 <div align="center">
 
