@@ -5,7 +5,7 @@ This manifest shows a simple setup of a production and dev environment of a To-D
 
 <p align="center">
   <a>
- <img width=1000px height=1600px src="FullStackDiagram.png" alt="FullStackDiagram"></a>
+ <img width=794px height=1123px src="FullStackDiagram.png" alt="FullStackDiagram"></a>
 </p>
 
 
