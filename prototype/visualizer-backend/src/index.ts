@@ -40,13 +40,15 @@ io.on("connection", (socket) => {
         socialdata.links.push({source: name, target: socialdata.nodes[randomIntFromInterval(0, socialdata.nodes.length-1)].id})
 
         year++;
-        sales.push({year: year, sales: randomIntFromInterval(2000, 500000)})
+        sales.push({x: year, y: randomIntFromInterval(2000, 500000)})
     },1000)
     interval = setInterval(() => getSocialDataNEmit(socket,socialdata), 1000) 
     interval = setInterval(() => getandEmit(socket), 1000)
     interval = setInterval(() => getSalesDataNEmit(socket,sales),1000)
     socket.on("disconnect", () => {
         console.log("Client disconnected, clearing data simulation")
+        socialdata = {nodes: [], links: []}
+        sales = []
         clearInterval(interval)
     })
 })

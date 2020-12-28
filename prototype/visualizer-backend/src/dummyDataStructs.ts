@@ -1,6 +1,6 @@
 export interface salesdata {
-    year: number
-    sales: number
+    x: number
+    y: number
 }
 export interface socialnodedata {
     nodes: {id: string, income:number}[]

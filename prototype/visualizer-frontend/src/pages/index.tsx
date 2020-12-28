@@ -8,19 +8,17 @@ import { Main } from '../components/Main';
 import { DarkModeSwitch } from '../components/DarkModeSwitch';
 import { Footer } from '../components/Footer';
 import BarChart from '../components/BarChart';
-import SocialNodeGraph from '../components/SocialNodeGraph';
+import SocialNodeGraph, {nodeGraphDataStruct} from '../components/SocialNodeGraph';
 import {SOCIALNODEDATA, SOCIALNODEDATA1} from '../data';
+import {ENDPOINT} from '../config';
+import FancyBarChart from '../components/FancyBarChart';
 const socketIOClient = require('socket.io-client');
-const ENDPOINT = 'http://localhost:3456';
-interface socialdatastruct{
-    nodes: {id: string}[]
-    links: {source: string, target:string}[]
-}
+
+
 interface indexProps {
     endpoint: string
     salesresponse: any
     timeresponse: number
-    socialdataresponse: socialdatastruct
 }
 
 class App extends React.Component<{},indexProps> {
@@ -29,7 +27,6 @@ class App extends React.Component<{},indexProps> {
         this.state = {
             salesresponse: [],
             timeresponse: 0,
-            socialdataresponse: {nodes: [], links: []},
 			endpoint: ENDPOINT,
 		};
 	}
@@ -41,13 +38,11 @@ class App extends React.Component<{},indexProps> {
 		//Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
         socket.on('FromAPI', (data) => this.setState({timeresponse: data}));
         socket.on('FromSalesData', (data) => this.setState({salesresponse: data}))
-        socket.on('FromSocialNodeData', (data) =>
-					this.setState({ socialdataresponse: data })
-				);
+     
 	}
 
 	render() {
-        const {timeresponse, salesresponse, socialdataresponse} = this.state;
+        const {timeresponse, salesresponse} = this.state;
 		return (
 			<Container>
 				<Hero title="DEMO" />
@@ -60,11 +55,12 @@ class App extends React.Component<{},indexProps> {
 							<BarChart data={salesresponse}></BarChart>
 						)}
 					</Box>
-					<Box>
-						
-                        <SocialNodeGraph nodeGraphData={socialdataresponse}></SocialNodeGraph>
-						
-					</Box>
+                    <Box>
+                        <SocialNodeGraph></SocialNodeGraph>
+                    </Box>
+                    {/* <Box> i hate this library i really do
+                        <FancyBarChart data={salesresponse}></FancyBarChart>
+                    </Box> */}
 				</Main>
 				<DarkModeSwitch></DarkModeSwitch>
 				<Footer>Fancy Footer Information</Footer>
