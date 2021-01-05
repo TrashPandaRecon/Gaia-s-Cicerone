@@ -1,0 +1,35 @@
+{
+  "name": "visualizer-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "next start",
+    "build": "next build",
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^1.0.2",
+    "@chakra-ui/react": "^1.0.4",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "d3": "5.16",
+    "d3-scale": "0.7.0",
+    "framer-motion": "^3.1.1",
+    "next": "^10.0.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "react-vis": "^1.11.7",
+    "react-vis-force": "^0.3.1",
+    "recharts": "^1.8.5",
+    "socket.io-client": "^3.0.4",
+    "web-vitals": "^0.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.16",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3"
+  }
+}
