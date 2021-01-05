@@ -63,13 +63,13 @@ class SocialNodeGraph extends React.Component<{}, nodeGraphDataProps> {
 							animate: true,
 						}}
 						labelAttr="label"
-                        highlightDependencies
+						highlightDependencies
 					>
 						{socialdataresponse.nodes.length == 0 ? (
 							<></>
 						) : (
 							socialdataresponse.nodes.map((node) => (
-                                <ForceGraphNode
+								<ForceGraphNode
 									key={node.id}
 									node={{
 										id: node.id,
