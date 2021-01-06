@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 from pymongo import MongoClient
 from json import loads
-import config
+import config.config as config
 consumer = KafkaConsumer(
     config.kafkaTopic, # topic
     bootstrap_servers=[config.kafkaBootstrapServer],
@@ -25,7 +25,6 @@ try:
         write_concern=None,
         read_concern=None,
         session=None,
-        collation=config.colla
     )
 except Exception as err:
     # collection already exists

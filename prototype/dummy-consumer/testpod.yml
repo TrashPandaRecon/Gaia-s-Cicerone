@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dummy-consumer-config
+data:
+  config.py: |
+    kafkaBootstrapServer = 'different-legs-kafka.default.svc.cluster.local:9092'
+    kafkaTopic = 'test'
+    mongoServer = 'flaky-summer-mongodb.mongo.svc.cluster.local:27017'
+    mongoCollectionName = 'test'
+    mongoUsername = 'admin1'
+    mongoPassword = 'password'
+    mongoAuthSource = 'test'
+    mongoAuthMechanism = 'SCRAM-SHA-256'
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  sde-dummy-consumer
+  labels:
+    name:  sde-dummy-consumer
+spec:
+  selector:
+    matchLabels:
+      name: sde-dummy-consumer
+  minReadySeconds: 5
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name:  sde-dummy-consumer
+    spec:
+     containers:
+      - name: dummy-consumer-devpod
+        image: trashpandarecon/sde-dummy-consumer:1.0.0
+        tty: true
+        stdin: true
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+          - containerPort: 3333
+        volumeMounts:
+          - name: config
+            mountPath: /code/config
+     volumes:
+        - name: config
+          configMap:
+            name: dummy-consumer-config 
+    
