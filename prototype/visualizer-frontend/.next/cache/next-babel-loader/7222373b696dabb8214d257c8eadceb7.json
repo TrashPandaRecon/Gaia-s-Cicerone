@@ -1,0 +1,1 @@
+{"ast":null,"code":"import React from 'react';\nimport * as d3 from 'd3';\nexport const useD3 = (renderChartFn, dependencies) => {\n  const ref = React.useRef();\n  React.useEffect(() => {\n    renderChartFn(d3.select(ref.current));\n    return () => {};\n  }, dependencies);\n  return ref;\n};","map":null,"metadata":{},"sourceType":"module"}
