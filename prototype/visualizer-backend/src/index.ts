@@ -1,13 +1,14 @@
 
 import express from "express";
-import {adjectives, animals, colors, uniqueNamesGenerator} from "unique-names-generator";
-import {randomIntFromInterval} from "./randUtil";
-import {salesdata, socialnodedata} from "./dummyDataStructs";
+import {socialNodeData} from "./DataPipes/SocialNodeData";
+import {LISTENPORT, ORIGIN} from "./config/config";
+import {siteUserData} from "./DataPipes/SalesData";
+import {dataPipes} from "./config/dataPipeEnum";
 const socketIo = require("socket.io")
 const http = require("http")
 
 
-const port = process.env.PORT || 3456;
+const port = process.env.PORT || LISTENPORT;
 const index = require('./routes/index');
 const app = express();
 app.use(index);
@@ -15,7 +16,7 @@ const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
     //  origin means frontend origin so if your frontend exposes 3000, use port  3000
-    origin: "http://localhost:3000",
+    origin: ORIGIN,
     methods: ["GET", "POST"]
   }
 });
@@ -23,48 +24,39 @@ const io = socketIo(server, {
 //  All this interval manipulation is just to ensure that all clients use the same interval
 var interval
 io.on("connection", (socket) => {
-    var sales: salesdata[]
-    sales = []
-    var year = 1998
-    var socialdata: socialnodedata
-    socialdata = {nodes:[],links:[]}
- 
+    let MDCVisitorData = new siteUserData(40000, 60000)
+    let CamoKakisVisitorData = new siteUserData(4000, 15000)
+    let WonderwallVisitorData = new siteUserData(150000, 170000)
+    let MindefVisitorData = new siteUserData(60000, 70000)
+    let SDEVisitorData = new siteUserData(10000,13000)
+    let socialdata = new socialNodeData(1000,10000)
     console.log("New client connected")
     if (interval) {
         clearInterval(interval);
     }
-    //incrementing dummy data
     interval = setInterval(() => {
-        var name = uniqueNamesGenerator({dictionaries: [adjectives, colors, animals]})
-        socialdata.nodes.push({id: name, income: randomIntFromInterval(1000, 10000)})
-        socialdata.links.push({source: name, target: socialdata.nodes[randomIntFromInterval(0, socialdata.nodes.length-1)].id})
+        socialdata.addNode()
+        socket.emit(dataPipes.ListenerRelationshipMapByIncome, socialdata.getSocialData())
+        MDCVisitorData.addDataPoint()
+        socket.emit(dataPipes.MDCSiteVisitorPerDay, MDCVisitorData.getGraphData())
+        CamoKakisVisitorData.addDataPoint()
+        socket.emit(dataPipes.CamoKakisVisitorsPerDay, CamoKakisVisitorData.getGraphData())
+        WonderwallVisitorData.addDataPoint()
+        socket.emit(dataPipes.WonderWallVisitorsPerDay, WonderwallVisitorData.getGraphData())
+        MindefVisitorData.addDataPoint()
+        socket.emit(dataPipes.MinDefSiteVisitorsPerDay,MindefVisitorData.getGraphData())
+        SDEVisitorData.addDataPoint()
+        socket.emit(dataPipes.SDEVisitorsPerDay, SDEVisitorData.getGraphData())
 
-        year++;
-        sales.push({x: year, y: randomIntFromInterval(40000, 60000)})
     },1000)
-    interval = setInterval(() => getSocialDataNEmit(socket,socialdata), 1000) 
-    interval = setInterval(() => getandEmit(socket), 1000)
-    interval = setInterval(() => getSalesDataNEmit(socket,sales),1000)
     socket.on("disconnect", () => {
         console.log("Client disconnected, clearing data simulation")
-        socialdata = {nodes: [], links: []}
-        sales = []
         clearInterval(interval)
     })
 })
-const getandEmit = async socket => {
-    const resp = new Date();
-    socket.emit("FromAPI", resp);
-    
-}
 
-const getSalesDataNEmit = async (socket, sales:salesdata[]) => {
-    socket.emit("FromSalesData", sales)
-}
-const getSocialDataNEmit = async (socket, socialdata: socialnodedata) => {
-    socket.emit("FromSocialNodeData", socialdata)
-    console.log(socialdata)
-}
+
+
 server.listen(port, () => console.log(`Listening on port ${port}`))
 
 

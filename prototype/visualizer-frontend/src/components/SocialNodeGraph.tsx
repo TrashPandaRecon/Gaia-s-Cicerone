@@ -1,14 +1,12 @@
-import { Alert, Box, Flex, Grid, GridItem, Spinner } from '@chakra-ui/react';
+import { Flex, Skeleton} from '@chakra-ui/react';
 import React from 'react';
 import { scaleCategory20 } from 'd3-scale';
 import {
 	InteractiveForceGraph,
 	ForceGraphNode,
 	ForceGraphLink,
-	// Hint as forceHint,
 } from 'react-vis-force';
-import { Hin as visHint } from 'react-vis';
-import { ENDPOINT } from '../config';
+import {SingletonSocket} from '../SingletonSocket';
 const socketIOClient = require('socket.io-client');
 // data structure definitions for NodeGraph component
 interface links {
@@ -24,35 +22,34 @@ export interface nodeGraphDataStruct {
 	links: links[];
 }
 interface nodeGraphDataProps {
-	value?: any;
 	socialdataresponse: nodeGraphDataStruct;
-	endpoint: string;
+    socketConnection: any;
+    dataPipe: string;
 }
 
-class SocialNodeGraph extends React.Component<{}, nodeGraphDataProps> {
+class SocialNodeGraph extends React.Component<{dataPipe:string}, nodeGraphDataProps> {
 	constructor(props) {
 		super(props);
 		this.state = {
-			value: null,
 			socialdataresponse: { nodes: [], links: [] },
-			endpoint: ENDPOINT,
+            dataPipe: this.props.dataPipe,
+            socketConnection: SingletonSocket.getInstance().getSocket()
 		};
 	}
 	
 	scale = scaleCategory20();
 	componentDidMount() {
-		const { endpoint } = this.state;
-		//Very simply connect to the socket
-		const socket = socketIOClient(endpoint);
-		//Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
-		socket.on('FromSocialNodeData', (data) =>
+		const { socketConnection,dataPipe } = this.state;
+		socketConnection.on(dataPipe, (data) =>
 			this.setState({ socialdataresponse: data })
 		);
 	}
 	render() {
-		const { socialdataresponse, value } = this.state;
+		const { socialdataresponse } = this.state;
 		return (
-			<>
+			<>{socialdataresponse.nodes.length == 0 ? (
+							<Skeleton height="500px"></Skeleton>
+						) : (
 				<Flex p="4">
 					<InteractiveForceGraph
 						animation="wobbly"
@@ -65,38 +62,33 @@ class SocialNodeGraph extends React.Component<{}, nodeGraphDataProps> {
 						labelAttr="label"
 						highlightDependencies
 					>
-						{socialdataresponse.nodes.length == 0 ? (
-							<></>
-						) : (
-							socialdataresponse.nodes.map((node) => (
-								<ForceGraphNode
-									key={node.id}
-									node={{
-										id: node.id,
-										label: JSON.stringify(node),
-										radius: Math.ceil((node.income / 1000) % 10),
-									}}
-									fill={this.scale(Math.ceil((node.income / 1000) % 10))}
-								/>
-							))
-						)}
-						{socialdataresponse.nodes.length == 0 ? (
-							<></>
-						) : (
-							socialdataresponse.links.map((link) => (
-								<ForceGraphLink
-									key={link.source + link.target}
-									link={{
-										source: link.source,
-										target: link.target,
-										value: 5,
-									}}
-									fill="blue"
-								/>
-							))
-						)}
+                            {socialdataresponse.nodes.map((node) => (
+                                <ForceGraphNode
+                                    key={node.id}
+                                    node={{
+                                        id: node.id,
+                                        label: JSON.stringify(node),
+                                        radius: Math.ceil((node.income / 1000) % 10),
+                                    }}
+                                    fill={this.scale(Math.ceil((node.income / 1000) % 10))}
+                                />
+                            )
+                            )}
+						
+                            {socialdataresponse.links.map((link) => (
+                                <ForceGraphLink
+                                    key={link.source + link.target}
+                                    link={{
+                                        source: link.source,
+                                        target: link.target,
+                                        value: 5, // this value is just to fix a bug in the library that prevents the node graph from being centered in the frame.
+                                    }}
+                                    fill="blue"
+                                />
+                            ))}
+						
 					</InteractiveForceGraph>
-				</Flex>
+				</Flex>)}
 			</>
 		);
 	}

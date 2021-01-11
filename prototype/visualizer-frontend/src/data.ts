@@ -1,7 +1,22 @@
 // Test datasets purely for unit testing.
 export const SALESDATA = [
-    {year: 1998, sales:1000200}
-]
+	{ x: new Date('01/11/2021').getTime(), y: 46000 },
+	{ x: new Date('01/12/2021').getTime(), y: 40000 },
+	{ x: new Date('01/13/2021').getTime(), y: 50000 },
+	{ x: new Date('01/14/2021').getTime(), y: 47000 },
+	{ x: new Date('01/15/2021').getTime(), y: 56000 },
+	{ x: new Date('01/16/2021').getTime(), y: 59000 },
+	{ x: new Date('01/17/2021').getTime(), y: 47000 },
+	{ x: new Date('01/18/2021').getTime(), y: 45000 },
+	{ x: new Date('01/19/2021').getTime(), y: 58000 },
+	{ x: new Date('01/20/2021').getTime(), y: 47000 },
+	{ x: new Date('01/21/2021').getTime(), y: 44000 },
+	{ x: new Date('01/22/2021').getTime(), y: 57000 },
+	{ x: new Date('01/23/2021').getTime(), y: 52000 },
+	{ x: new Date('01/24/2021').getTime(), y: 48000 },
+	{ x: new Date('01/25/2021').getTime(), y: 49000 },
+	{ x: new Date('01/26/2021').getTime(), y: 50000 },
+];
 
 export const SOCIALNODEDATA = {
 	nodes: [
@@ -87,11 +102,7 @@ export const SOCIALNODEDATA = {
 	],
 };
 export const SOCIALNODEDATA1 = {
-	nodes: [
-		{ id: 'Harry' },
-		{ id: 'Sally' },
-		{ id: 'Alice' },
-	],
+	nodes: [{ id: 'Harry' }, { id: 'Sally' }, { id: 'Alice' }],
 	links: [
 		{ source: 'Harry', target: 'Sally' },
 		{ source: 'Harry', target: 'Alice' },
