@@ -107,8 +107,8 @@ function BarChart({ data }) {
 				</svg>
 				<DiscreteColorLegend
 					orientation="horizontal"
-					width={300}
-					items={[{ title: 'Sales', color: 'steelblue', strokeWidth:100 }]}
+					width={400}
+					items={[{ title: 'Camokakis Website Unique Visitors Per Year', color: 'steelblue', strokeWidth:100 }]}
             />
             </>
 	);

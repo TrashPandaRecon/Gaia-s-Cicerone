@@ -60,7 +60,7 @@ class SocialNodeGraph extends React.Component<{}, nodeGraphDataProps> {
 							height: 500,
 							width: 1000,
 							alpha: 1,
-							animate: true,
+                            animate: true,
 						}}
 						labelAttr="label"
 						highlightDependencies

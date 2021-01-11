@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
         socialdata.links.push({source: name, target: socialdata.nodes[randomIntFromInterval(0, socialdata.nodes.length-1)].id})
 
         year++;
-        sales.push({x: year, y: randomIntFromInterval(2000, 500000)})
+        sales.push({x: year, y: randomIntFromInterval(40000, 60000)})
     },1000)
     interval = setInterval(() => getSocialDataNEmit(socket,socialdata), 1000) 
     interval = setInterval(() => getandEmit(socket), 1000)
