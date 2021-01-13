@@ -25,7 +25,7 @@ spec:
     matchLabels:
       name: sde-dummy-consumer
   minReadySeconds: 5
-  replicas: 1
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 1

@@ -1,16 +1,13 @@
 import {
-	Box, Spinner,
+	Box, Flex, 
 } from '@chakra-ui/react';
 import React, {  } from 'react';
 import { Hero } from '../components/Hero';
 import { Container } from '../components/Container';
 import { Main } from '../components/Main';
-import { DarkModeSwitch } from '../components/DarkModeSwitch';
 import { Footer } from '../components/Footer';
 import BarChart from '../components/LineChart';
 import SocialNodeGraph from '../components/SocialNodeGraph';
-import {ENDPOINT} from '../config/config';
-import FancyBarChart from '../components/FancyBarChart';
 import {dataPipes} from '../config/dataPipeEnum';
 const socketIOClient = require('socket.io-client');
 
@@ -24,13 +21,13 @@ class App extends React.Component<{},indexProps> {
 			<Container>
 				<Hero title="DEMO" />
 				<Main>
-					<Box width="100%">
+					<Flex>
                         <BarChart dataPipe={[dataPipes.MDCSiteVisitorPerDay,dataPipes.CamoKakisVisitorsPerDay,dataPipes.MinDefSiteVisitorsPerDay,dataPipes.SDEVisitorsPerDay,dataPipes.WonderWallVisitorsPerDay]} yAxisName={dataPipes.MDCSiteVisitorPerDay}></BarChart>
-					</Box>
-                    <Box>
+					</Flex>
+                    <Flex>
                         <p>{dataPipes.ListenerRelationshipMapByIncome}</p>
 						<SocialNodeGraph dataPipe={dataPipes.ListenerRelationshipMapByIncome}></SocialNodeGraph>
-					</Box>
+					</Flex>
 				</Main>
 				<Footer>Fancy Footer Information</Footer>
 			</Container>
