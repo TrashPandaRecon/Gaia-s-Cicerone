@@ -1,14 +1,14 @@
 from kafka import KafkaConsumer
 from pymongo import MongoClient
 from json import loads
-import config
+import config.config as config
 consumer = KafkaConsumer(
     config.kafkaTopic, # topic
     bootstrap_servers=[config.kafkaBootstrapServer],
-    auto_offset_reset='earliest', #when set to earliest the consumer starts reading from the latest committed offset 
-    enable_auto_commit=True, # ensures that the consumer commits its read offset every interval.
-    auto_commit_interval_ms=1000, # since data is coming in every 5 seconds, an interval of 1 second is fine
-    group_id='counters', #this is the consumer group to which the consumer belongs. It needs to be set for auto commit to work
+    auto_offset_reset=config.kafka_auto_offset_reset, #when set to earliest the consumer starts reading from the latest committed offset 
+    enable_auto_commit=config.kafka_enable_auto_commit, # ensures that the consumer commits its read offset every interval.
+    auto_commit_interval_ms=config.kafka_auto_commit_interval_ms, # since data is coming in every 5 seconds, an interval of 1 second is fine
+    group_id=config.kafka_consumerGroupID, #this is the consumer group to which the consumer belongs. It needs to be set for auto commit to work
     value_deserializer=lambda x: loads(x.decode('utf-8')))
 
 client = MongoClient(config.mongoServer,
@@ -25,7 +25,6 @@ try:
         write_concern=None,
         read_concern=None,
         session=None,
-        collation=config.colla
     )
 except Exception as err:
     # collection already exists

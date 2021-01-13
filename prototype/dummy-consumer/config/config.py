@@ -1,0 +1,12 @@
+kafkaBootstrapServer = 'different-legs-kafka.default.svc.cluster.local:9092'
+kafka_topic ='test'
+kafka_consumerGroupID='counters'
+kafka_auto_offset_reset = 'earliest'
+kafka_enable_auto_commit = True
+kafka_auto_commit_interval_ms = 1000
+mongoServer = 'flaky-summer-mongodb.mongo.svc.cluster.local:27017'
+mongoCollectionName = 'test'
+mongoUsername = 'admin1'
+mongoPassword = 'password'
+mongoAuthSource = 'test'
+mongoAuthMechanism = 'SCRAM-SHA-256'

@@ -24,3 +24,6 @@ spec:
     - name: dev-directory
       hostPath:
         path: /Users/will/Desktop/dev/SDE/prototype/dummy-consumer
+    - name: config
+      configMap:
+          name: dummy-consumer-config
