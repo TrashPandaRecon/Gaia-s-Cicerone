@@ -230,36 +230,5 @@ spec:
                   number: 3000
             pathType: Prefix
             path: /
----
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     nginx.ingress.kubernetes.io/rewrite-target: /ws/$1
-#     nginx.ingress.kubernetes.io/proxy-connect-timeout: "7200"
-#     nginx.ingress.kubernetes.io/proxy-send-timeout: "7200"
-#     nginx.ingress.kubernetes.io/proxy-read-timeout: "7200"
-#     nginx.ingress.kubernetes.io/websocket-services: "visualizer-backend-svc"
-#     nginx.ingress.kubernetes.io/use-regex: "true"
-#   name: demo-ingress2
-# spec:
-#   rules:
-    
-#     - http:
-#         paths:
-#           - backend:
-#               service:
-#                 name: visualizer-backend-svc
-#                 port:
-#                   number: 3456
-#             pathType: Prefix
-#             path: /socket.io(/|$)(.*)
-#           - backend:
-#               service:
-#                 name: visualizer-backend-svc
-#                 port:
-#                   number: 3456
-#             pathType: Prefix
-#             path: /ws
+
           
