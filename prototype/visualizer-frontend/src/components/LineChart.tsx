@@ -16,7 +16,7 @@ import {
 	Hint,
 } from 'react-vis';
 import * as d3 from 'd3';
-import { Box, Grid, GridItem, Skeleton, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, Skeleton, Spinner } from '@chakra-ui/react';
 import { dataPipes } from '../config/dataPipeEnum';
 import { delay } from '../Util/delay';
 interface XYResponseStruct {
@@ -77,7 +77,7 @@ class BarChart extends React.Component<{ dataPipe: string[] }, XYDataProps> {
 	render() {
 		const { graphdataStorage, value, items, searchText } = this.state;
 		return (
-			<div>
+			<Flex p="1">
 				{graphdataStorage.length == 0 ? (
 					<Skeleton height="500px"></Skeleton>
 				) : (
@@ -95,7 +95,7 @@ class BarChart extends React.Component<{ dataPipe: string[] }, XYDataProps> {
 									<VerticalGridLines />
 									<HorizontalGridLines />
 									<XAxis tickLabelAngle={-45} tickTotal={10} />
-									<YAxis tickFormat={(tick) => d3.format('.2s')(tick)} />
+                                        <YAxis title='Visitors' tickFormat={(tick) => d3.format('.2s')(tick)} />
 
 									{graphdataStorage.map((graphdata) => (
 										<LineMarkSeries
@@ -141,7 +141,7 @@ class BarChart extends React.Component<{ dataPipe: string[] }, XYDataProps> {
 						</Grid>
 					</>
 				)}
-			</div>
+			</Flex>
 		);
 	}
 }

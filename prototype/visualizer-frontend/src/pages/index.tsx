@@ -9,7 +9,8 @@ import { Footer } from '../components/Footer';
 import BarChart from '../components/LineChart';
 import SocialNodeGraph from '../components/SocialNodeGraph';
 import {dataPipes} from '../config/dataPipeEnum';
-const socketIOClient = require('socket.io-client');
+import {DarkModeSwitch} from '../components/DarkModeSwitch';
+
 
 
 interface indexProps {
@@ -21,14 +22,16 @@ class App extends React.Component<{},indexProps> {
 			<Container>
 				<Hero title="DEMO" />
 				<Main>
-					<Flex>
-                        <BarChart dataPipe={[dataPipes.MDCSiteVisitorPerDay,dataPipes.CamoKakisVisitorsPerDay,dataPipes.MinDefSiteVisitorsPerDay,dataPipes.SDEVisitorsPerDay,dataPipes.WonderWallVisitorsPerDay]} yAxisName={dataPipes.MDCSiteVisitorPerDay}></BarChart>
+					<Flex justifyContent="center" alignItems="center" width="100%">
+						<BarChart dataPipe={[dataPipes.MDCSiteVisitorPerDay]}></BarChart>
 					</Flex>
-                    <Flex>
-                        <p>{dataPipes.ListenerRelationshipMapByIncome}</p>
-						<SocialNodeGraph dataPipe={dataPipes.ListenerRelationshipMapByIncome}></SocialNodeGraph>
+					<Flex justifyContent="center" alignItems="center" width='100%'>
+						<SocialNodeGraph
+							dataPipe={dataPipes.ListenerRelationshipMapByIncome}
+						></SocialNodeGraph>
 					</Flex>
-				</Main>
+                </Main>
+                <DarkModeSwitch/>
 				<Footer>Fancy Footer Information</Footer>
 			</Container>
 		);
