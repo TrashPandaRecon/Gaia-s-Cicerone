@@ -11,7 +11,7 @@ data:
     kafka_auto_offset_reset = 'earliest'
     kafka_enable_auto_commit = True
     kafka_auto_commit_interval_ms = 1000
-    mongoServer = 'flaky-summer-mongodb.mongo.svc.cluster.local:27017'
+    mongoServer = 'flaky-summer-mongodb.default.svc.cluster.local'
     mongoCollectionName = 'test'
     mongoUsername = 'admin1'
     mongoPassword = 'password'
@@ -61,46 +61,32 @@ spec:
           configMap:
             name: consumer-producer-config
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name:  sde-dummy-producer
   labels:
     name:  sde-dummy-producer
 spec:
-  selector:
-    matchLabels:
-      name: sde-dummy-producer
-  minReadySeconds: 5
-  replicas: 1
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        name:  sde-dummy-producer
-    spec:
-     containers:
-      - name: dummy-producer-devpod
-        image: trashpandarecon/sde-dummy-producer:1.0.0
-        tty: true
-        stdin: true
-        resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-        ports:
-          - containerPort: 3334
-        volumeMounts:
-          - name: config
-            mountPath: /code/config
-     volumes:
-        - name: config
-          configMap:
-            name: consumer-producer-config
+  containers:
+  - name: dummy-producer-devpod
+    image: trashpandarecon/sde-dummy-producer:1.0.0
+    tty: true
+    stdin: true
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"
+    ports:
+      - containerPort: 3334
+    volumeMounts:
+      - name: config
+        mountPath: /code/config
+  volumes:
+      - name: config
+        configMap:
+          name: consumer-producer-config
+  restartPolicy: OnFailure 
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -211,7 +197,7 @@ metadata:
   name: demo-ingress
 spec:
   rules:
-    - host: ws.localhost
+    - host: sodrama.com
       http:
         paths:
           - backend:
@@ -221,6 +207,8 @@ spec:
                   number: 3456
             pathType: Prefix
             path: /
+          
+    
     - http:
         paths:
           - backend:
@@ -230,5 +218,15 @@ spec:
                   number: 3000
             pathType: Prefix
             path: /
+    # - host: wp.localhost
+    #   http:
+    #     paths:
+    #       - backend:
+    #           service:
+    #             name: electric-liquid-wordpress
+    #             port:
+    #               number: 80
+    #         pathType: Prefix
+    #         path: /
 
           

@@ -16,7 +16,6 @@ COPY yarn.lock .
 RUN yarn install
 # add app
 COPY . .
-RUN yarn build
 
 # start app
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]
