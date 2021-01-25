@@ -218,15 +218,15 @@ spec:
                   number: 3000
             pathType: Prefix
             path: /
-    # - host: wp.localhost
-    #   http:
-    #     paths:
-    #       - backend:
-    #           service:
-    #             name: electric-liquid-wordpress
-    #             port:
-    #               number: 80
-    #         pathType: Prefix
-    #         path: /
+    - host: wp.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: hurried-expert-wordpress
+                port:
+                  number: 80
+            pathType: Prefix
+            path: /
 
           
