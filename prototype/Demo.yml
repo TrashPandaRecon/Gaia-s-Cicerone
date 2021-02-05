@@ -197,7 +197,7 @@ metadata:
   name: demo-ingress
 spec:
   rules:
-    - host: sodrama.com
+    - host: ws.localhost
       http:
         paths:
           - backend:
@@ -218,15 +218,6 @@ spec:
                   number: 3000
             pathType: Prefix
             path: /
-    - host: wp.localhost
-      http:
-        paths:
-          - backend:
-              service:
-                name: hurried-expert-wordpress
-                port:
-                  number: 80
-            pathType: Prefix
-            path: /
+
 
           
