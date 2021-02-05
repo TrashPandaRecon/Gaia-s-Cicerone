@@ -16,18 +16,9 @@
 <p align="center"> 
     <br> A guide on the architecture and technologies used in cloud native applications.`
 </p>
+## Side Note
+Due to all cloud applications being run on the Linux Kernel, there will be an issue if you develop an application on Windows without added configuration. In DOS, files are ended with \n (also called LF). In Unix, files are ended with \r\n (also called CRLF). The result of this is that if you develop in Windows without any configuration, your code files will end with LF, and because all cloud applications are run with the Linux Kernel, the container will simply fail and exit with code 127 because it is unable to discern when a file ends, resulting in a file that is basically infinite.
 
-## 📝 Table of Contents
-
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
 
