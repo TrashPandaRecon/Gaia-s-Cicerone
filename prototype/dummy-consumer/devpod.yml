@@ -1,0 +1,29 @@
+# This is a development pod, it mounts a dev directory into the node.js pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-consumer-devpod
+  labels:
+    name: dummy-consumer-devpod
+spec:
+  containers:
+  - name: dummy-consumer-devpod
+    image: python:3.7
+    tty: true
+    stdin: true
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"
+    ports:
+      - containerPort: 3333
+    volumeMounts:
+      - mountPath: /code
+        name: dev-directory
+  volumes:
+    - name: dev-directory
+      hostPath:
+        path: /Users/will/Desktop/dev/SDE/prototype/dummy-consumer
+    - name: config
+      configMap:
+          name: dummy-consumer-config

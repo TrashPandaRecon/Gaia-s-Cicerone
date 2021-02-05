@@ -1,0 +1,97 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  local:
+    # This path needs to actually exist. Usually you use a disk mounted under /mnt/ but we are
+    # using a directory to keep this example usable.
+    path: /Users/will/kube-storage/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          #  You will need to exchange the hostname value below to the name of 
+          # the node that matches your environment.
+          # you can check by typing kubectl get nodes --show-labels.
+          # they key above represents a dictionary key.
+          # in this example the output was 
+          # beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=docker-desktop,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+          # notice how Kubernetes.io/hostname=docker-desktop is in the output? yup.
+          values:
+          - docker-desktop
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo
+      zone: dev
+      version: v1
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: todo
+        zone: dev
+        version: v1
+    spec:
+      containers:
+      - name: todo-pod
+        image: trashpandarecon/todo_list:1.0
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+          - mountPath: /etc/todos
+            name: todolist-ps
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
+      volumes:
+        - name: todolist-ps
+          persistentVolumeClaim:
+              claimName: local-pvc

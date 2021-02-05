@@ -1,0 +1,41 @@
+# This is a development pod, it mounts a dev directory into the node.js pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: visualizer-frontend-devpod
+  labels:
+    name: visualizer-frontend-devpod
+spec:
+  containers:
+  - name: visualizer-frontend-devpod
+    image: node:latest
+    tty: true
+    stdin: true
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"
+    ports:
+      - containerPort: 3456
+    volumeMounts:
+      - mountPath: /code
+        name: dev-directory
+  volumes:
+    - name: dev-directory
+      hostPath:
+        path: /Users/will/Desktop/dev/SDE/prototype/visualizer-frontend
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  visualizer-svc
+spec:
+  selector:
+    name: visualizer-frontend-devpod
+  type: NodePort
+  ports:
+  - name:  name-of-the-port
+    port:  3000
+    targetPort:  3000
+    nodePort: 30001
+    

@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const ENDPOINT = 'http://localhost:3456';","map":{"version":3,"sources":["/Users/will/Desktop/dev/SDE/prototype/visualizer-frontend/src/config.ts"],"names":["ENDPOINT"],"mappings":"AAAA,OAAO,MAAMA,QAAQ,GAAG,uBAAjB","sourcesContent":["export const ENDPOINT = 'http://localhost:3456';\n"]},"metadata":{},"sourceType":"module"}

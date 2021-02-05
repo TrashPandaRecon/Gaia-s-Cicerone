@@ -1,0 +1,223 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consumer-producer-config
+data:
+# below is a python script containing all the configurations for consumers and producers. edit as necessary.
+  config.py: |
+    kafkaConsumerBootstrapServer = 'different-legs-kafka.default.svc.cluster.local:9092'
+    kafka_topic ='test'
+    kafka_consumerGroupID='counters'
+    kafka_auto_offset_reset = 'earliest'
+    kafka_enable_auto_commit = True
+    kafka_auto_commit_interval_ms = 1000
+    mongoServer = 'flaky-summer-mongodb.default.svc.cluster.local'
+    mongoCollectionName = 'test'
+    mongoUsername = 'admin1'
+    mongoPassword = 'password'
+    mongoAuthSource = 'test'
+    mongoAuthMechanism = 'SCRAM-SHA-256'
+    kafkaProducerBootstrapServer = 'different-legs-kafka-0.different-legs-kafka-headless.default.svc.cluster.local:9092'
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  sde-dummy-consumer
+  labels:
+    name:  sde-dummy-consumer
+spec:
+  selector:
+    matchLabels:
+      name: sde-dummy-consumer
+  minReadySeconds: 5
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name:  sde-dummy-consumer
+    spec:
+     containers:
+      - name: dummy-consumer-devpod
+        image: trashpandarecon/sde-dummy-consumer:1.0.0
+        tty: true
+        stdin: true
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+          - containerPort: 3333
+        volumeMounts:
+          - name: config
+            mountPath: /code/config
+     volumes:
+        - name: config
+          configMap:
+            name: consumer-producer-config
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name:  sde-dummy-producer
+  labels:
+    name:  sde-dummy-producer
+spec:
+  containers:
+  - name: dummy-producer-devpod
+    image: trashpandarecon/sde-dummy-producer:1.0.0
+    tty: true
+    stdin: true
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"
+    ports:
+      - containerPort: 3334
+    volumeMounts:
+      - name: config
+        mountPath: /code/config
+  volumes:
+      - name: config
+        configMap:
+          name: consumer-producer-config
+  restartPolicy: OnFailure 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualizer-backend-devpod
+  labels:
+    name: visualizer-backend-devpod
+spec:
+  selector:
+    matchLabels:
+      name: sde-visualizer-backend
+  minReadySeconds: 5
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name:  sde-visualizer-backend
+    spec:
+      containers:
+      - name: sde-visualizer-backend
+        image: trashpandarecon/sde-visualizer-backend:1.0.0
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+          - containerPort: 3456
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  visualizer-backend-svc
+spec:
+  selector:
+    name: sde-visualizer-backend
+  type: ClusterIP
+  ports:
+  - name:  visualizer-backend
+    port:  3456
+    targetPort:  3456
+    # nodePort: 30002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualizer-frontend-devpod
+  labels:
+    name: visualizer-frontend-devpod
+spec:
+  selector:
+    matchLabels:
+      name: sde-visualizer-frontend
+  minReadySeconds: 5
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name:  sde-visualizer-frontend
+    spec:
+      containers:
+        - name: sde-visualizer-frontend
+          image: trashpandarecon/sde-visualizer-frontend:1.0.0
+          tty: true
+          stdin: true
+          resources:
+            limits:
+              memory: '1Gi'
+              cpu: '1000m'
+          ports:
+            - containerPort: 3000
+    
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: visualizer-frontend-svc
+spec:
+  selector:
+    name: sde-visualizer-frontend
+  type: ClusterIP
+  ports:
+    - name: name-of-the-port
+      port: 3000
+      targetPort: 3000
+      # nodePort: 30001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "7200"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "7200"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "7200"
+    nginx.ingress.kubernetes.io/websocket-services: "visualizer-backend-svc"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: demo-ingress
+spec:
+  rules:
+    - host: ws.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: visualizer-backend-svc
+                port:
+                  number: 3456
+            pathType: Prefix
+            path: /
+          
+    
+    - http:
+        paths:
+          - backend:
+              service:
+                name: visualizer-frontend-svc
+                port:
+                  number: 3000
+            pathType: Prefix
+            path: /
+
+
+          
