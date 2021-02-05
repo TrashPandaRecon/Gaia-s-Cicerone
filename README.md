@@ -59,5 +59,4 @@ The entire repo is centered around the Guide, read the guide and go through the 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - Hat tip to anyone whose code was used
-- Inspiration
-- References
+- Documentation
