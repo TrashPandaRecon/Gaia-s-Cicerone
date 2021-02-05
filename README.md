@@ -33,43 +33,30 @@
 
 This project attempts to give the user knowledge about the architecture and technologies used in building cloud native applications. The end goal is not complete fluency in everything mentioned. Instead, it is to give the user enough base knowledge to seek answers for themselves and understand the design patterns and terminology used.
 
-## 🏁 Getting Started <a name = "getting_started"></a>
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+A basic understanding of computers, DNS, networking, storage, cpu, etc.
 
-```
-Give examples
-```
+You will at the very least need to install Docker and a local Kubernetes cluster. I reccommend Docker-Desktop since you will definitely need Docker, which comes with Docker-Desktop.
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+The installation processes are similar for all platforms, you can either go to the Docker and Kubernetes website and go through their installation guide, or use package managers. 
 
-Say what the step will be
+I highly reccommend setting up a package manager. Here is a list for Windows/MacOS/Linux
 
-```
-Give the example
-```
+Linux: There will be a package manager for your distribution.
 
-And repeat
+MacOS: [Homebrew](https://brew.sh)
 
-```
-until finished
-```
-
+Windows: [Chocolatey](https://chocolatey.org)
 
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+The entire repo is centered around the Guide, read the guide and go through the examples under the examples folder. There is a prototype consisting of a distributed setup showcasing parallell processing with Kafka and a visualizer backend and frontend.
 
-## 🚀 Deployment <a name = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a name = "authors"></a>
 
