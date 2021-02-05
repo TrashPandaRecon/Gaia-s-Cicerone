@@ -29,8 +29,7 @@ This is by no means a full repository containing everything you need to get a Mi
 The concept of this demo is simple, we will have the follwing
 * Producers producing dummy data 
 * Consumers consuming data and writing to the database
-* Argo Workflows transforming data
-* A Visualizer that consists of a frontend and a backend that will read from the database to show information.
+* A Visualizer that consists of a frontend and a backend that produce dummy data to show information via graphs.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
