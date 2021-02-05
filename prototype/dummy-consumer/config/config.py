@@ -1,4 +1,4 @@
-kafkaBootstrapServer = 'different-legs-kafka.default.svc.cluster.local:9092'
+kafkaConsumerBootstrapServer = 'different-legs-kafka.default.svc.cluster.local:9092'
 kafka_topic ='test'
 kafka_consumerGroupID='counters'
 kafka_auto_offset_reset = 'earliest'
@@ -8,5 +8,6 @@ mongoServer = 'flaky-summer-mongodb.mongo.svc.cluster.local:27017'
 mongoCollectionName = 'test'
 mongoUsername = 'admin1'
 mongoPassword = 'password'
-mongoAuthSource = 'test'
+mongoAuthSource = 'test' #Mongo database name
 mongoAuthMechanism = 'SCRAM-SHA-256'
+kafkaProducerBootstrapServer = 'different-legs-kafka-0.different-legs-kafka-headless.default.svc.cluster.local:9092'

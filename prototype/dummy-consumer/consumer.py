@@ -3,8 +3,8 @@ from pymongo import MongoClient
 from json import loads
 import config.config as config
 consumer = KafkaConsumer(
-    config.kafkaTopic, # topic
-    bootstrap_servers=[config.kafkaBootstrapServer],
+    config.kafka_topic, # topic
+    bootstrap_servers=[config.kafkaConsumerBootstrapServer],
     auto_offset_reset=config.kafka_auto_offset_reset, #when set to earliest the consumer starts reading from the latest committed offset 
     enable_auto_commit=config.kafka_enable_auto_commit, # ensures that the consumer commits its read offset every interval.
     auto_commit_interval_ms=config.kafka_auto_commit_interval_ms, # since data is coming in every 5 seconds, an interval of 1 second is fine

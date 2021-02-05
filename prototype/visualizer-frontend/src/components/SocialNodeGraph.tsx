@@ -27,68 +27,75 @@ interface nodeGraphDataProps {
     dataPipe: string;
 }
 
-class SocialNodeGraph extends React.Component<{dataPipe:string}, nodeGraphDataProps> {
+class SocialNodeGraph extends React.Component<
+	{ dataPipe: string },
+	nodeGraphDataProps
+> {
 	constructor(props) {
 		super(props);
 		this.state = {
 			socialdataresponse: { nodes: [], links: [] },
-            dataPipe: this.props.dataPipe,
-            socketConnection: SingletonSocket.getInstance().getSocket()
+			dataPipe: this.props.dataPipe,
+			socketConnection: SingletonSocket.getInstance().getSocket(),
 		};
 	}
-	
+
 	scale = scaleCategory20();
 	componentDidMount() {
-		const { socketConnection,dataPipe } = this.state;
+		const { socketConnection, dataPipe } = this.state;
 		socketConnection.on(dataPipe, (data) =>
 			this.setState({ socialdataresponse: data })
 		);
 	}
+	componentWillUnmount() {
+		const { dataPipe, socketConnection } = this.state;
+		socketConnection.off(dataPipe, () => {});
+	}
 	render() {
 		const { socialdataresponse } = this.state;
 		return (
-			<>{socialdataresponse.nodes.length == 0 ? (
-							<Skeleton height="500px"></Skeleton>
-						) : (
-				<Flex p="4">
-					<InteractiveForceGraph
-						animation="wobbly"
-						simulationOptions={{
-							height: 500,
-							width: 1000,
-							alpha: 1,
-                            animate: true,
-						}}
-						labelAttr="label"
-						highlightDependencies
-					>
-                            {socialdataresponse.nodes.map((node) => (
-                                <ForceGraphNode
-                                    key={node.id}
-                                    node={{
-                                        id: node.id,
-                                        label: JSON.stringify(node),
-                                        radius: Math.ceil((node.income / 1000) % 10),
-                                    }}
-                                    fill={this.scale(Math.ceil((node.income / 1000) % 10))}
-                                />
-                            )
-                            )}
-						
-                            {socialdataresponse.links.map((link) => (
-                                <ForceGraphLink
-                                    key={link.source + link.target}
-                                    link={{
-                                        source: link.source,
-                                        target: link.target,
-                                        value: 5, // this value is just to fix a bug in the library that prevents the node graph from being centered in the frame.
-                                    }}
-                                    fill="blue"
-                                />
-                            ))}
-						
-					</InteractiveForceGraph>
-				</Flex>)}
+			<>
+				{socialdataresponse.nodes.length == 0 ? (
+					<Skeleton height="500px"></Skeleton>
+				) : (
+					<Flex>
+						<InteractiveForceGraph
+							animation="wobbly"
+							simulationOptions={{
+								height: 500,
+								width: 500,
+								alpha: 1,
+								animate: true,
+							}}
+							labelAttr="label"
+							highlightDependencies
+						>
+							{socialdataresponse.nodes.map((node) => (
+								<ForceGraphNode
+									key={node.id}
+									node={{
+										id: node.id,
+										label: JSON.stringify(node),
+										radius: Math.ceil((node.income / 1000) % 10),
+									}}
+									fill={this.scale(Math.ceil((node.income / 1000) % 10))}
+								/>
+							))}
+
+							{socialdataresponse.links.map((link) => (
+								<ForceGraphLink
+									key={link.source + link.target}
+									link={{
+										source: link.source,
+										target: link.target,
+										value: 5, // this value is just to fix a bug in the library that prevents the node graph from being centered in the frame.
+									}}
+									fill="blue"
+								/>
+							))}
+						</InteractiveForceGraph>
+					</Flex>
+				)}
 			</>
 		);
 	}
