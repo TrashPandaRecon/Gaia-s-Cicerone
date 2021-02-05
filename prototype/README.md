@@ -18,7 +18,6 @@
 - [Getting Started](#getting_started)
 - [Deployment](#deployment)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
 - [Authors](#authors)
 
 
@@ -39,13 +38,15 @@ These instructions will omit the step by step process of getting the demo up and
 
 ### Prerequisites
 
-What systems you need in place before bringing up the containers. I recommend getting a Kubernetes cluster up and installing kubeapps on it for management and deployment of these systems.
+What systems you need in place before bringing up the containers. I recommend getting a Kubernetes cluster up and installing [kubeapps](https://kubeapps.com/docs/getting-started/) on it for management and deployment of these systems.
+
+As a general rule, we disable all storage persistence when deploying these. This is to keep the prototype as simple as possible.
 
 ```
 1. A Single Kubernetes Cluster - Eg.MiniKube or Docker-Desktop
-2. Argo
-3. Kafka
-4. MongoDB
+2. NGINX Ingress Controller - via helm
+3. Kafka - via kubeapps
+4. MongoDB - via kubeapps
 
 ```
 
@@ -61,13 +62,14 @@ Then you will need to know the DNS name and Port your Kafka Brokers are accessib
 
 You will need a MongoDB deployed on your cluster, of course, the database passwords and users should be known, these are used when configuring the containers that interact with Mongo
 
-### Argo
-Argo is just a Kubernetes custom resource definition, but it is also reliant on containers and services that enable its functionality much like Kafka.
+### NGINX Ingress Controller ( Kubernetes Version )
+An Ingress Controller is needed for Ingress to work. For this prototype, we use the Nginx Ingress Controller which can be helm deployed using instructions from this [site](https://kubernetes.github.io/ingress-nginx/deploy/)
 
 ## 🚀 Deployment <a name = "deployment"></a>
-TODO: write this after actually finalizing the demo.
 
-Add additional notes about how to deploy this on a live system.
+You will have to get the Producer, Consumer DNS Names for the Kafka Brokers, as well as the MongoDB custom username, password, and DNS name it is accessible from within the cluster and substitute all of these values accordingly in the ConfigMap contained in the Demo.yml kubernetes manifest files.
+
+Before deploying you should also create a Topic in Kafka with at least 50 partitions either via a container manually or via a script. The name of the Topic should also be substituted in the ConfigMap contained in Demo.yml.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 - [Typescript](https://www.typescriptlang.org) - Programming Language
