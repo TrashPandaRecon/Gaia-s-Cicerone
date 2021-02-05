@@ -14,7 +14,7 @@
 ---
 
 <p align="center"> 
-    <br> A guide on the architecture and technologies used in cloud native applications.`
+    <br> A guide on the architecture and technologies used in cloud native applications.
 </p>
 
 ## ☆ Side Note <a name = "Side Note"></a>
