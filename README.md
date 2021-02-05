@@ -24,12 +24,12 @@ Due to all cloud applications being run on the Linux Kernel, there will be an is
 
 ## 🧐 About <a name = "about"></a>
 
-This project attempts to give the user knowledge about the architecture and technologies used in building cloud native applications. The end goal is not complete fluency in everything mentioned. Instead, it is to give the user enough base knowledge to seek answers for themselves and understand the design patterns and terminology used.
+This project attempts to give the user knowledge about the architecture and technologies used in building cloud native applications. The end goal is not complete fluency in everything mentioned. Instead, it is to give the user enough of a base to know what questions to ask and how to seek answers for themselves by understanding the design patterns and terminology used.
 
 
 ### Prerequisites
 
-A basic understanding of computers, DNS, networking, storage, cpu, etc.
+A intermediate understanding of computers, DNS, networking, storage, cpu, etc.
 
 You will at the very least need to install Docker and a local Kubernetes cluster. I reccommend Docker-Desktop since you will definitely need Docker, which comes with Docker-Desktop.
 
